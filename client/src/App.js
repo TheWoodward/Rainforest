@@ -13,7 +13,11 @@ function App() {
 
   function handleLocationClick() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
+      navigator.geolocation.getCurrentPosition(success, error, {
+        timeout: 10000,
+        enableHighAccuracy: true,
+        maximumAge: Infinity
+      });
     } else {
       console.log("Geolocation not supported");
     }
