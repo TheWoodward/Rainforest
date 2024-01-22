@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 import { Context } from "./App";
 
 const Home = () => {
-  const { accountData } = useContext(Context);
-  const [account] = accountData;
+  const { accountContext } = useContext(Context);
+  const [account] = accountContext;
 
   return <Container style={{ paddingTop: 50 }}>
     <h1>

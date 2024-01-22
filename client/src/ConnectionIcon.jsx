@@ -31,8 +31,8 @@ const popoverDisconnected = (
 );
 
 const ConnectionIcon = () => {
-  const { connectedData } = useContext(Context);
-  const [connected, setConnected] = connectedData;
+  const { connectedContext } = useContext(Context);
+  const [connected, setConnected] = connectedContext;
 
   const checkConnection = () => {
     axios

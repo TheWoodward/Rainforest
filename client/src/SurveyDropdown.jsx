@@ -6,10 +6,10 @@ import Form from "react-bootstrap/Form";
 import { Context } from "./App";
 
 const SurveyDropdown = () => {
-  const { surveyData, surveysData } = useContext(Context);
-  const [survey, setSurvey] = surveyData;
+  const { surveyContext, surveysContext } = useContext(Context);
+  const [survey, setSurvey] = surveyContext;
 
-  const [surveys, setSurveys] = surveysData;
+  const [surveys, setSurveys] = surveysContext;
   const [show, setShow] = useState(false);
   const [textInput, setTextInput] = useState("");
 

@@ -5,8 +5,8 @@ import Table from "react-bootstrap/Table";
 import { Context } from "./App";
 
 const Reports = () => {
-  const { connectedData } = useContext(Context);
-  const [connected] = connectedData;
+  const { connectedContext } = useContext(Context);
+  const [connected] = connectedContext;
 
   const [reports, setReports] = useState(null);
   console.table(reports);

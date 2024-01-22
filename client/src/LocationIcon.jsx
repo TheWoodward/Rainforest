@@ -3,10 +3,10 @@ import React, { useContext, useEffect } from "react";
 import { Context } from "./App";
 
 const LocationIcon = () => {
-  const { latData, longData } = useContext(Context);
+  const { latContext, longContext } = useContext(Context);
 
-  const [lat, setLat] = latData;
-  const [long, setLong] = longData;
+  const [lat, setLat] = latContext;
+  const [long, setLong] = longContext;
 
   const locationSuccess = (position) => {
     const latitude = position.coords.latitude;

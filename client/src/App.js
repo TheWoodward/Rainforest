@@ -21,16 +21,16 @@ function App() {
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
-  const [accountData, setAccountData] = useState(null);
-  const [latData, setLatData] = useState(null);
-  const [longData, setLongData] = useState(null);
-  const [surveyData, setSurveyData] = useState(null);
-  const [surveysData, setSurveysData] = useState([]);
-  const [connectedData, setConnectedData] = useState(false);
+  const [accountContext, setAccountContext] = useState(null);
+  const [latContext, setLatContext] = useState(null);
+  const [longContext, setLongContext] = useState(null);
+  const [surveyContext, setSurveyContext] = useState(null);
+  const [surveysContext, setSurveysContext] = useState([]);
+  const [connectedContext, setConnectedContext] = useState(false);
 
   useEffect(() => {
     const uploadLocalReports = async () => {
-      if (connectedData) {
+      if (connectedContext) {
         const reports = JSON.parse(localStorage.getItem("reports")) || [];
         const localReports = reports.filter(
           (report) => report.status === "created"
@@ -56,29 +56,29 @@ function App() {
       }
     };
     uploadLocalReports();
-  }, [connectedData]);
+  }, [connectedContext]);
 
   useEffect(() => {
-    if (accountData) {
-      localStorage.setItem("accountData", JSON.stringify(accountData));
+    if (accountContext) {
+      localStorage.setItem("accountContext", JSON.stringify(accountContext));
       setShow(false);
     }
-  }, [accountData]);
+  }, [accountContext]);
 
   useEffect(() => {
-    setAccountData(JSON.parse(localStorage.getItem("accountData")) || null);
+    setAccountContext(JSON.parse(localStorage.getItem("accountContext")) || null);
     const getSurveys = async () => {
       const surveysResponse = await axios.get("http://localhost:8080/surveys")
-      setSurveysData(surveysResponse.data)
+      setSurveysContext(surveysResponse.data)
     }
     try {
-      if (connectedData) {
+      if (connectedContext) {
         getSurveys();
       } else {
         const localReports = JSON.parse(localStorage.getItem("reports")) || []
         const surveys = localReports.map((report) => report.survey).filter((survey) => survey && survey.length > 0)
         const uniqueSurveys = [...new Set(surveys)]
-        setSurveysData(uniqueSurveys)
+        setSurveysContext(uniqueSurveys)
       }
     } catch (ex) {
 
@@ -96,19 +96,19 @@ function App() {
     if (!level || !textInput || textInput.length < 1) {
       return;
     }
-    setAccountData({ user: textInput, level: level });
+    setAccountContext({ user: textInput, level: level });
     handleClose();
   };
 
   return (
     <Context.Provider
       value={{
-        accountData: [accountData, setAccountData],
-        latData: [latData, setLatData],
-        longData: [longData, setLongData],
-        surveyData: [surveyData, setSurveyData],
-        surveysData: [surveysData, setSurveysData],
-        connectedData: [connectedData, setConnectedData],
+        accountContext: [accountContext, setAccountContext],
+        latContext: [latContext, setLatContext],
+        longContext: [longContext, setLongContext],
+        surveyContext: [surveyContext, setSurveyContext],
+        surveysContext: [surveysContext, setSurveysContext],
+        connectedContext: [connectedContext, setConnectedContext],
       }}
     >
       <div className="App">

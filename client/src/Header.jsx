@@ -16,8 +16,8 @@ const expand = "md";
 const brand = "Rainforest Ranger ⛺";
 
 const Header = () => {
-  const { accountData } = useContext(Context);
-  const [account] = accountData;
+  const { accountContext } = useContext(Context);
+  const [account] = accountContext;
 
   return (
     <Navbar

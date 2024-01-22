@@ -28,12 +28,12 @@ const treeDiseases = [
 const AddTree = () => {
   const [show, setShow] = useState(false);
 
-  const { connectedData, latData, longData, surveyData, accountData } = useContext(Context);
-  const [connected] = connectedData;
-  const [lat] = latData;
-  const [long] = longData;
-  const [survey] = surveyData;
-  const [account] = accountData;
+  const { connectedContext, latContext, longContext, surveyContext, accountContext } = useContext(Context);
+  const [connected] = connectedContext;
+  const [lat] = latContext;
+  const [long] = longContext;
+  const [survey] = surveyContext;
+  const [account] = accountContext;
 
   const [selectedFile, setSelectedFile] = useState("");
   const [preview, setPreview] = useState();
