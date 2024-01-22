@@ -1,97 +1,117 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import logo from "./logo.svg";
-import "./App.css";
+import Header from "./Header";
+import { Route, Routes } from "react-router-dom";
+import AddTree from "./AddTree";
+import Reports from "./Reports";
+import Home from "./Home";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
+export const Context = createContext();
 
-
+// import "./App.css";
 
 function App() {
-  const [connected, setConnected] = useState(false);
-  const [lat, setLat] = useState(null);
-  const [long, setLong] = useState(null);
-
-  function handleLocationClick() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error, {
-        timeout: 10000,
-        enableHighAccuracy: true,
-        maximumAge: Infinity
-      });
-    } else {
-      console.log("Geolocation not supported");
-    }
-  }
-
-  function success(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    setLat(latitude)
-    setLong(longitude)
-    console.log(`https://www.google.com/maps/embed?ll=${latitude},${longitude}`)
-    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-  }
-
-  function error() {
-    console.log("Unable to retrieve your location");
-  }
-
-  const checkConnection = () => {
-    axios
-      .get("http://localhost:8080/", {})
-      .then((res) => {
-        console.log(res.status);
-        if (res.status === 200) {
-          setConnected(true);
-        } else {
-          setConnected(false);
-        }
-      })
-      .catch((err) => {
-        setConnected(false);
-        console.error(err);
-      });
-  };
+  const [show, setShow] = useState(true);
+  const [textInput, setTextInput] = useState("");
+  const [level, setLevel] = useState(null);
+  const [accountData, setAccountData] = useState(null);
+  const [latData, setLatData] = useState(null);
+  const [longData, setLongData] = useState(null);
+  const [surveyData, setSurveyData] = useState(null);
 
   useEffect(() => {
-    checkConnection();
-    var intervalId = window.setInterval(function () {
-      checkConnection();
-    }, 5000);
+    if (accountData) {
+      localStorage.setItem("accountData", JSON.stringify(accountData));
+      setShow(false);
+    }
+  }, [accountData]);
 
-    return () => {
-      clearInterval(intervalId);
-    };
+  useEffect(() => {
+    setAccountData(JSON.parse(localStorage.getItem("accountData")) || null);
   }, []);
+
+  const handleClose = () => {
+    setShow(false);
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    if (!level || !textInput || textInput.length < 1) {
+      return;
+    }
+    setAccountData({ user: textInput, level: level });
+    handleClose();
+  };
+
   return (
-    <div className="App">
-      <div style={{
-        width: '100px', height: '100px', backgroundColor: connected ? "green" : "red", borderRadius: 50, position: 'absolute', right: '2%', top: '2%', textAlign: 'center',
-        verticalAlign: 'middle',
-        lineHeight: '100px'
-      }}>
-        {connected ? "ONLINE" : "OFFLINE"}
+    <Context.Provider
+      value={{
+        accountData: [accountData, setAccountData],
+        latData: [latData, setLatData],
+        longData: [longData, setLongData],
+        surveyData: [surveyData, setSurveyData],
+      }}
+    >
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/add" element={<AddTree />}></Route>
+          <Route path="/reports" element={<Reports />}></Route>
+        </Routes>
+
+        <Modal show={show}>
+          <Modal.Header>
+            <Modal.Title>Welcome to Rainforest Ranger!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={handleSave}>
+              <Form.Group className="mb-3" controlId="user">
+                <Form.Label>Please enter your name:</Form.Label>
+                <Form.Control
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="account">
+                <Form.Label>Account Type</Form.Label>
+                <br></br>
+                {["Ranger", "Analyst"].map((accountType) => (
+                  <Form.Check id={accountType} inline>
+                    <Form.Check.Input
+                      type="radio"
+                      name="account"
+                      onChange={(e) => setLevel(e.target.id)}
+                    />
+                    <Form.Check.Label>{accountType}</Form.Check.Label>
+                  </Form.Check>
+                ))}
+              </Form.Group>
+              <Button variant="success" type="submit">
+                Login
+              </Button>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <header className="App-header">
+          {/* <button onClick={handleLocationClick}>Location</button>
+        {lat}
+        {long}
+        {lat && (
+          <div className="google-map-code">
+            <iframe
+              src={`https://maps.google.com/maps?q=${lat},${long}&hl=es;z=14&output=embed`}
+            ></iframe>
+          </div>
+        )} */}
+        </header>
       </div>
-
-      <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        {/* <button onClick={() => alert("hello world")}>Hello</button> */}
-        <button onClick={handleLocationClick}>Location</button>
-        {lat && <div className="google-map-code">
-          <iframe src={`https://maps.google.com/maps?q=${lat},${long}&hl=es;z=14&output=embed`}></iframe>
-        </div>}
-
-
-        {/* <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a> */}
-      </header>
-    </div >
+    </Context.Provider>
   );
 }
 
