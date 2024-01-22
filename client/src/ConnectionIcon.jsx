@@ -1,9 +1,10 @@
 import { UilWifi, UilWifiSlash } from "@iconscout/react-unicons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import axios from "axios";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import Button from "react-bootstrap/Button";
+import { Context } from "./App";
 
 const popoverConnected = (
   <Popover id="popover-basic">
@@ -30,7 +31,8 @@ const popoverDisconnected = (
 );
 
 const ConnectionIcon = () => {
-  const [connected, setConnected] = useState(false);
+  const { connectedData } = useContext(Context);
+  const [connected, setConnected] = connectedData;
 
   const checkConnection = () => {
     axios

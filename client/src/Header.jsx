@@ -9,11 +9,16 @@ import ConnectionIcon from "./ConnectionIcon";
 import LocationIcon from "./LocationIcon";
 import SurveyDropdown from "./SurveyDropdown";
 import { Link } from "react-router-dom";
+import { Context } from "./App";
+import { useContext } from "react";
 
 const expand = "md";
 const brand = "Rainforest Ranger ⛺";
 
 const Header = () => {
+  const { accountData } = useContext(Context);
+  const [account] = accountData;
+
   return (
     <Navbar
       expand={expand}
@@ -59,7 +64,7 @@ const Header = () => {
                   style={{ textDecoration: "none", color: "white" }}
                   to="/reports"
                 >
-                  Reports
+                  {(account?.user ? account.user + "'s" : "My") + " Reports"}
                 </Link>
               </Nav.Link>
               <Nav.Link>

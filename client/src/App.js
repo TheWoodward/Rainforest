@@ -9,6 +9,8 @@ import Home from "./Home";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Toast from "react-bootstrap/Toast";
+import ToastContainer from "react-bootstrap/ToastContainer";
 
 export const Context = createContext();
 
@@ -18,10 +20,47 @@ function App() {
   const [show, setShow] = useState(true);
   const [textInput, setTextInput] = useState("");
   const [level, setLevel] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastContent, setToastContent] = useState({});
+
   const [accountData, setAccountData] = useState(null);
   const [latData, setLatData] = useState(null);
   const [longData, setLongData] = useState(null);
   const [surveyData, setSurveyData] = useState(null);
+  const [surveysData, setSurveysData] = useState([]);
+  const [connectedData, setConnectedData] = useState(false);
+
+  useEffect(() => {
+    const uploadLocalReports = async () => {
+      if (connectedData) {
+        const reports = JSON.parse(localStorage.getItem("reports")) || [];
+        const localReports = reports.filter(
+          (report) => report.status === "created"
+        );
+        console.log("🚀 ~ useEffect ~ localReports:", localReports);
+        for (const localReport of localReports) {
+          const response = await axios.post(
+            "http://localhost:8080/upload",
+            localReport
+          );
+          const responseId = response.data.id;
+          console.log("🚀 ~ useEffect ~ responseId:", responseId);
+          setToastContent({
+            header: "Success!",
+            body: `Report ${responseId} uploaded.`,
+            bg: "success",
+          });
+          setShowToast(true);
+          const index = reports.findIndex((report) => report.id === responseId);
+          if (reports[index]) {
+            reports[index].status = response.data.status;
+            localStorage.setItem("reports", JSON.stringify(reports));
+          }
+        }
+      }
+    };
+    uploadLocalReports();
+  }, [connectedData]);
 
   useEffect(() => {
     if (accountData) {
@@ -32,6 +71,7 @@ function App() {
 
   useEffect(() => {
     setAccountData(JSON.parse(localStorage.getItem("accountData")) || null);
+    // get surveyS data from reports
   }, []);
 
   const handleClose = () => {
@@ -54,6 +94,8 @@ function App() {
         latData: [latData, setLatData],
         longData: [longData, setLongData],
         surveyData: [surveyData, setSurveyData],
+        surveysData: [surveysData, setSurveysData],
+        connectedData: [connectedData, setConnectedData],
       }}
     >
       <div className="App">
@@ -63,6 +105,30 @@ function App() {
           <Route path="/add" element={<AddTree />}></Route>
           <Route path="/reports" element={<Reports />}></Route>
         </Routes>
+
+        <ToastContainer
+          className="p-3"
+          position={"bottom-center"}
+          style={{ zIndex: 1 }}
+        >
+          <Toast
+            onClose={() => setShowToast(false)}
+            show={showToast}
+            delay={3000}
+            bg={toastContent.bg}
+            autohide
+          >
+            <Toast.Header closeButton={false}>
+              <img
+                src="holder.js/20x20?text=%20"
+                className="rounded me-2"
+                alt=""
+              />
+              <strong className="me-auto">{toastContent.header}</strong>
+            </Toast.Header>
+            <Toast.Body>{toastContent.body}</Toast.Body>
+          </Toast>
+        </ToastContainer>
 
         <Modal show={show}>
           <Modal.Header>

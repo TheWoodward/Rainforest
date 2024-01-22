@@ -10,11 +10,13 @@ const reportSchema = new mongoose.Schema({
   status: String,
   image: String,
   location: {
-    latitude: String,
-    longitude: String,
+    lat: Number,
+    long: Number,
   },
   survey: String,
   user: String,
+  age: Number,
+  size: Number,
 });
 
 module.exports = mongoose.model("Report", reportSchema);

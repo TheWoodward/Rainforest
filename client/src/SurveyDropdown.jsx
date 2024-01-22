@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -6,12 +6,22 @@ import Form from "react-bootstrap/Form";
 import { Context } from "./App";
 
 const SurveyDropdown = () => {
-  const { surveyData } = useContext(Context);
+  const { surveyData, surveysData } = useContext(Context);
   const [survey, setSurvey] = surveyData;
 
-  const [surveys, setSurveys] = useState([]);
+  const [surveys, setSurveys] = surveysData;
   const [show, setShow] = useState(false);
   const [textInput, setTextInput] = useState("");
+
+  useEffect(() => {
+    if (survey) {
+      localStorage.setItem("survey", survey);
+    }
+  }, [survey]);
+
+  useEffect(() => {
+    setSurvey(JSON.parse(localStorage.getItem("survey")) || null);
+  }, []);
 
   const handleClose = () => {
     setTextInput("");

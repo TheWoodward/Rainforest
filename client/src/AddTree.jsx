@@ -2,13 +2,15 @@ import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 import Container from "react-bootstrap/esm/Container";
 import Button from "react-bootstrap/esm/Button";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
+import { Context } from "./App";
+import { UilTrees } from "@iconscout/react-unicons";
 
 const treeSpecies = [
   { name: "Deciduous", image: "🌳" },
@@ -26,6 +28,14 @@ const treeDiseases = [
 const AddTree = () => {
   const [show, setShow] = useState(false);
 
+  const { connectedData, latData, longData, surveyData, accountData } =
+    useContext(Context);
+  const [connected] = connectedData;
+  const [lat] = latData;
+  const [long] = longData;
+  const [survey] = surveyData;
+  const [account] = accountData;
+
   const [selectedFile, setSelectedFile] = useState("");
   const [preview, setPreview] = useState();
   const [modalContent, setModalContent] = useState({});
@@ -34,13 +44,11 @@ const AddTree = () => {
   const [toastContent, setToastContent] = useState({});
 
   const [treeName, setTreeName] = useState(null);
-  console.log("🚀 ~ AddTree ~ treeName:", treeName);
   const [treeDisease, setTreeDisease] = useState(null);
-  console.log("🚀 ~ AddTree ~ treeDisease:", treeDisease);
   const [datetime, setDatetime] = useState(new Date());
-  console.log("🚀 ~ AddTree ~ datetime:", datetime);
   const [notes, setNotes] = useState("");
-  console.log("🚀 ~ AddTree ~ notes:", notes);
+  const [age, setAge] = useState(0);
+  const [size, setSize] = useState(0);
 
   useEffect(() => {
     if (reports) {
@@ -98,7 +106,7 @@ const AddTree = () => {
   const handleClose = () => setShow(false);
   const handleManual = () => {
     setDatetime(new Date());
-    setModalContent({ type: "Manual Record" });
+    setModalContent({ type: "Manual Report" });
     setShow(true);
   };
 
@@ -112,7 +120,12 @@ const AddTree = () => {
       disease: treeDisease,
       datetime,
       notes,
+      age,
+      size,
       status: "created",
+      location: { lat, long },
+      survey,
+      user: account.user,
     };
 
     setShow(false);
@@ -166,7 +179,7 @@ const AddTree = () => {
     inputFile.current.click();
     setTreeName(null);
     setTreeDisease(null);
-    setModalContent({ type: "Automatic Record" });
+    setModalContent({ type: "Automatic Report" });
   };
 
   //   Individual Trees
@@ -180,23 +193,26 @@ const AddTree = () => {
   // Date/time
 
   const getModalBody = (type) => {
-    if (type === "Manual Record") {
+    if (type === "Manual Report") {
       return (
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="datetime">
-              <Form.Label>Date & Time</Form.Label>
-              <br></br>
+            <Form.Group className="mb-3" controlId="fixed">
+              <Form.Label>Date & Time</Form.Label>{" "}
               <Form.Text>
                 {datetime.toLocaleDateString() +
                   " " +
                   datetime.toLocaleTimeString()}
               </Form.Text>
+              <br></br>
+              <Form.Label>Survey</Form.Label> <Form.Text>{survey}</Form.Text>
+              <br></br>
+              <Form.Label>Location</Form.Label>{" "}
+              <Form.Text>{lat + ", " + long}</Form.Text>
             </Form.Group>
             <Form.Group className="mb-3" controlId="species">
               <Form.Label>Species</Form.Label>
               <br></br>
-
               {treeSpecies.map((species) => (
                 <Form.Check id={species.name} inline>
                   <Form.Check.Input
@@ -208,7 +224,7 @@ const AddTree = () => {
                     {species.image}
                     <br></br>
                     {species.name}
-                    <br></br>0 recorded
+                    <br></br>0 reported
                     {/* <Card.Img
                       variant="top"
                       src={
@@ -220,6 +236,29 @@ const AddTree = () => {
                 </Form.Check>
               ))}
             </Form.Group>
+            <Form.Group className="mb-3" controlId="age">
+              <Form.Label>Approximate Age</Form.Label>
+              <Form.Range
+                max={1000}
+                min={0}
+                defaultValue={0}
+                onChange={(e) => setAge(e.target.value)}
+              />
+              {age + " years"}
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="age">
+              <Form.Label>Approximate Size</Form.Label>
+              <br></br>
+              <UilTrees size={size / 4 + 30} />
+              <Form.Range
+                max={200}
+                min={0}
+                defaultValue={0}
+                onChange={(e) => setSize(e.target.value)}
+              />
+              {size + "ft"}
+            </Form.Group>
+
             <Form.Group className="mb-3" controlId="diseases">
               <Form.Label>Diseases</Form.Label>
               <br></br>
@@ -342,17 +381,29 @@ const AddTree = () => {
             <Card>
               <Card.Img
                 variant="top"
-                style={{ height: 300, objectFit: "cover" }}
+                style={{
+                  height: 300,
+                  objectFit: "cover",
+                  filter: !connected ? "grayscale(1)" : "none",
+                }}
                 src="https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               />
               <Card.Body>
-                <Card.Title>Automatic Record</Card.Title>
+                <Card.Title>Automatic Report</Card.Title>
                 <Card.Text>
-                  Quickly and easily record a tree with automatic detection.
+                  Quickly and easily report a tree with automatic detection.
                 </Card.Text>
-                <Button variant="success" onClick={handleAutomatic}>
-                  Add Record
+                <Button
+                  variant={!connected ? "secondary" : "success"}
+                  onClick={handleAutomatic}
+                  disabled={!connected}
+                >
+                  Add Report
                 </Button>
+                <Card.Text>
+                  {!connected &&
+                    "Automatic Reports are only available while online. Please check your connection and try again."}
+                </Card.Text>
               </Card.Body>
             </Card>
           </Col>
@@ -364,12 +415,12 @@ const AddTree = () => {
                 src="https://images.pexels.com/photos/129743/pexels-photo-129743.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               />
               <Card.Body>
-                <Card.Title>Manual Record</Card.Title>
+                <Card.Title>Manual Report</Card.Title>
                 <Card.Text>
-                  Quickly and easily record a tree with automatic detection.
+                  Quickly and easily report a tree with automatic detection.
                 </Card.Text>
                 <Button variant="success" onClick={handleManual}>
-                  Add Record
+                  Add Report
                 </Button>
               </Card.Body>
             </Card>

@@ -1,4 +1,4 @@
-import { UilUserLocation } from "@iconscout/react-unicons";
+import { UilMapMarkerAlt, UilMapMarkerSlash } from "@iconscout/react-unicons";
 import React, { useContext, useEffect } from "react";
 import { Context } from "./App";
 
@@ -48,7 +48,11 @@ const LocationIcon = () => {
 
   return (
     <>
-      <UilUserLocation size="30" color="lightgrey" />
+      {lat && long ? (
+        <UilMapMarkerAlt size="30" color="lightgrey" />
+      ) : (
+        <UilMapMarkerSlash size="30" color="darkred" />
+      )}
       {lat && long ? `${lat}, ${long}` : "Unknown"}
     </>
   );
