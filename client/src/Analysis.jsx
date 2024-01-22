@@ -5,6 +5,7 @@ import { UilClock, UilUpload, UilEye } from "@iconscout/react-unicons";
 
 const Analysis = () => {
   const [reports, setReports] = useState([])
+  console.table(reports)
 
   useEffect(() => {
     const getReports = async () => {
@@ -28,23 +29,31 @@ const Analysis = () => {
     <thead>
       <tr>
         <th>ID</th>
+        <th>User</th>
         <th>Date</th>
         <th>Species</th>
+        <th>Age</th>
+        <th>Size</th>
         <th>Disease</th>
         <th>Notes</th>
+        <th>Location</th>
         <th>Status</th>
       </tr>
     </thead>
     <tbody>
       {reports &&
         reports.map(
-          ({ id, datetime, treeName, treeDisease, notes, status }) => (
+          ({ id, user, datetime, species, age, size, disease, notes, location, status }) => (
             <tr>
               <td>{id}</td>
+              <td>{user}</td>
               <td>{datetime}</td>
-              <td>{treeName}</td>
-              <td>{treeDisease}</td>
+              <td>{species}</td>
+              <td>{`${age} years`}</td>
+              <td>{`${size}ft`}</td>
+              <td>{disease}</td>
               <td>{notes}</td>
+              <td>{location?.lat && location?.long ? `${location.lat}, ${location.long}` : ""}</td>
               <td>{getStatusIcon(status)}</td>
             </tr>
           )
