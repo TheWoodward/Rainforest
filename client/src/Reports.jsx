@@ -14,7 +14,6 @@ const Reports = () => {
   useEffect(() => {
     if (reports) {
       localStorage.setItem("reports", JSON.stringify(reports));
-      console.log("reports", reports);
     }
 
   }, [reports]);
@@ -25,10 +24,8 @@ const Reports = () => {
         const getReports = async () => {
           const localReports = JSON.parse(localStorage.getItem("reports")) || []
           const reportsResponse = await axios.post("http://localhost:8080/seens", localReports.filter((report) => report.status === "uploaded").map((report) => report.id))
-          console.log("🚀 ~ getReports ~ reportsResponse:", reportsResponse.data)
           const seens = reportsResponse.data
           const newReports = localReports.map((report) => ({ ...report, status: seens.find((seenReport) => seenReport.id === report.id)?.status || report.status }))
-          console.log("🚀 ~ getReports ~ newReports:", newReports)
           setReports(newReports)
         }
         getReports();

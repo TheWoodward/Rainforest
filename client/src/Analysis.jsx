@@ -13,7 +13,6 @@ const Analysis = () => {
   const [countsData, setCountsData] = useState([])
   const [usersData, setUsersData] = useState([])
   const [species, setSpecies] = useState([])
-  console.log("🚀 ~ Analysis ~ species:", species)
   console.table(reports)
 
   const greens = ['green', 'darkgreen', 'limegreen', 'forestgreen', 'lightgreen', 'darkolivegreen', 'darkseagreen', 'greenyellow', 'lawngreen']
@@ -58,7 +57,6 @@ const Analysis = () => {
       }
     })
     const usersDataArray = Object.keys(usersDataObject).map((user) => ({ user, count: usersDataObject[user] }))
-    console.log("🚀 ~ useEffect ~ usersDataArray:", usersDataArray)
     setUsersData(usersDataArray)
 
     const countsDataArray = Object.keys(countsDataObject).map((survey) => ({ survey, ...countsDataObject[survey] }))

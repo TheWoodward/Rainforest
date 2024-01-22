@@ -38,7 +38,6 @@ const ConnectionIcon = () => {
     axios
       .get("http://localhost:8080/", {})
       .then((res) => {
-        console.log(res.status);
         if (res.status === 200) {
           setConnected(true);
         } else {

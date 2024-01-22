@@ -35,14 +35,12 @@ function App() {
         const localReports = reports.filter(
           (report) => report.status === "created"
         );
-        console.log("🚀 ~ useEffect ~ localReports:", localReports);
         for (const localReport of localReports) {
           const response = await axios.post(
             "http://localhost:8080/upload",
             localReport
           );
           const responseId = response.data.id;
-          console.log("🚀 ~ useEffect ~ responseId:", responseId);
           setToastContent({
             header: "Success!",
             body: `Report ${responseId} uploaded.`,

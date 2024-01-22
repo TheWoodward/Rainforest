@@ -28,8 +28,7 @@ const treeDiseases = [
 const AddTree = () => {
   const [show, setShow] = useState(false);
 
-  const { connectedData, latData, longData, surveyData, accountData } =
-    useContext(Context);
+  const { connectedData, latData, longData, surveyData, accountData } = useContext(Context);
   const [connected] = connectedData;
   const [lat] = latData;
   const [long] = longData;
@@ -53,7 +52,6 @@ const AddTree = () => {
   useEffect(() => {
     if (reports) {
       localStorage.setItem("reports", JSON.stringify(reports));
-      console.log("reports", reports);
     }
   }, [reports]);
 
@@ -87,9 +85,6 @@ const AddTree = () => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
-      console.log("called: ", reader);
-      console.log(reader.result);
-      //call api
       const tree = await axios.post("http://localhost:8080/identify", {
         tree: reader.result,
       });
@@ -112,7 +107,6 @@ const AddTree = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    console.log(e);
     const reportId = Math.random().toString(16).slice(2);
     const newReport = {
       id: reportId,
@@ -136,7 +130,6 @@ const AddTree = () => {
         newReport
       );
       const responseId = response.data.id;
-      console.log("🚀 ~ handleSave ~ responseId:", responseId);
       if (!responseId) {
         setReports([...reports, newReport]);
         setToastContent({
