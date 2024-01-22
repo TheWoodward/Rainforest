@@ -1,12 +1,12 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
+import { UilClock, UilEye, UilUpload } from "@iconscout/react-unicons";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
-import { UilClock, UilUpload, UilEye } from "@iconscout/react-unicons";
-import { CSVLink } from "react-csv";
-import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Col from "react-bootstrap/esm/Col";
-import Row from "react-bootstrap/esm/Row";
 import Container from "react-bootstrap/esm/Container";
+import Row from "react-bootstrap/esm/Row";
+import { CSVLink } from "react-csv";
+import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const Analysis = () => {
   const [reports, setReports] = useState([])

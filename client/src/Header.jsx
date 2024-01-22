@@ -1,16 +1,16 @@
+import { useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import { Link } from "react-router-dom";
+import { Context } from "./App";
 import ConnectionIcon from "./ConnectionIcon";
 import LocationIcon from "./LocationIcon";
 import SurveyDropdown from "./SurveyDropdown";
-import { Link } from "react-router-dom";
-import { Context } from "./App";
-import { useContext } from "react";
 
 const expand = "md";
 const brand = "Rainforest Ranger ⛺";

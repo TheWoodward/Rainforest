@@ -1,21 +1,18 @@
-import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import logo from "./logo.svg";
-import Header from "./Header";
-import { Route, Routes } from "react-router-dom";
-import AddTree from "./AddTree";
-import Reports from "./Reports";
-import Home from "./Home";
-import Modal from "react-bootstrap/Modal";
+import React, { createContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
 import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
+import { Route, Routes } from "react-router-dom";
+import AddTree from "./AddTree";
 import Analysis from "./Analysis";
+import Header from "./Header";
+import Home from "./Home";
+import Reports from "./Reports";
 
 export const Context = createContext();
-
-// import "./App.css";
 
 function App() {
   const [show, setShow] = useState(true);
