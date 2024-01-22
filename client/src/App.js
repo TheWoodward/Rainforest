@@ -11,6 +11,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
+import Analysis from "./Analysis";
 
 export const Context = createContext();
 
@@ -71,8 +72,13 @@ function App() {
 
   useEffect(() => {
     setAccountData(JSON.parse(localStorage.getItem("accountData")) || null);
-    // get surveyS data from reports
+    const getSurveys = async () => {
+      const surveysResponse = await axios.get("http://localhost:8080/surveys")
+      setSurveysData(surveysResponse.data)
+    }
+    getSurveys();
   }, []);
+
 
   const handleClose = () => {
     setShow(false);
@@ -104,6 +110,7 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/add" element={<AddTree />}></Route>
           <Route path="/reports" element={<Reports />}></Route>
+          <Route path="/analysis" element={<Analysis />}></Route>
         </Routes>
 
         <ToastContainer

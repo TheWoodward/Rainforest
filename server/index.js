@@ -63,12 +63,26 @@ app.post("/identify", async (req, res) => {
 app.post("/upload", async (req, res) => {
   const data = req.body;
   console.log("uploaded data", data);
-  const upload = new Report(data);
+  const upload = new Report({ ...data, status: "uploaded" });
   upload.save();
   res.send({
     id: data.id,
     status: "uploaded",
   });
+});
+
+app.get("/reports", async (req, res) => {
+  const reports = await Report.find()
+  console.log("🚀 ~ app.get ~ reports:", reports)
+  res.send(reports)
+});
+
+app.get("/surveys", async (req, res) => {
+  const reports = await Report.find()
+  const surveys = reports.map((report) => report.survey).filter((survey) => survey && survey.length > 0)
+  const uniqueSurveys = [...new Set(surveys)]
+  console.log("🚀 ~ app.get ~ uniqueSurveys:", uniqueSurveys)
+  res.send(uniqueSurveys)
 });
 
 app.listen(port, () => {

@@ -68,6 +68,14 @@ const Header = () => {
                 </Link>
               </Nav.Link>
               <Nav.Link>
+                <Link
+                  style={{ textDecoration: "none", color: "white" }}
+                  to="/analysis"
+                >
+                  Analysis
+                </Link>
+              </Nav.Link>
+              <Nav.Link>
                 <LocationIcon></LocationIcon>
               </Nav.Link>
               <SurveyDropdown></SurveyDropdown>
