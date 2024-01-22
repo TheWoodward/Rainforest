@@ -192,6 +192,20 @@ const AddTree = () => {
   // Photos?
   // Date/time
 
+  const getPreviousCounts = (species) => {
+    const localReports = JSON.parse(localStorage.getItem("reports")) || []
+    const filteredReports = localReports.filter((report) => report?.species === species)
+    const previousCounts = {}
+    filteredReports.forEach((report) => {
+      if (previousCounts[report.survey]) {
+        previousCounts[report.survey] += 1
+      } else {
+        previousCounts[report.survey] = 1
+      }
+    });
+    return previousCounts;
+  }
+
   const getModalBody = (type) => {
     if (type === "Manual Report") {
       return (
@@ -214,26 +228,26 @@ const AddTree = () => {
               <Form.Label>Species</Form.Label>
               <br></br>
               {treeSpecies.map((species) => (
-                <Form.Check id={species.name} inline>
-                  <Form.Check.Input
-                    type="radio"
-                    name="species"
-                    onChange={(e) => setTreeName(e.target.id)}
-                  />
-                  <Form.Check.Label>
-                    {species.image}
-                    <br></br>
-                    {species.name}
-                    <br></br>0 reported
-                    {/* <Card.Img
+                <div>
+                  <Form.Check id={species.name} inline>
+                    <Form.Check.Input
+                      type="radio"
+                      name="species"
+                      onChange={(e) => setTreeName(e.target.id)}
+                    />
+                    <Form.Check.Label>
+                      {species.image} {species.name}
+                      {Object.keys(getPreviousCounts(species.name)).map((survey) => <div>{`${survey}: ${getPreviousCounts(species.name)[survey]} reported`}</div>)}
+                      {/* <Card.Img
                       variant="top"
                       src={
                         preview ||
                         "https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                       }
                     /> */}
-                  </Form.Check.Label>
-                </Form.Check>
+                    </Form.Check.Label>
+                  </Form.Check>
+                </div>
               ))}
             </Form.Group>
             <Form.Group className="mb-3" controlId="age">
@@ -311,9 +325,8 @@ const AddTree = () => {
           <Form.Group className="mb-3" controlId="diseases">
             <Form.Label>Diseases</Form.Label>
             <br></br>
-            <Form.Text>{`Detected Diseases: ${
-              !treeDisease ? "None (Healthy)" : treeDisease
-            }`}</Form.Text>
+            <Form.Text>{`Detected Diseases: ${!treeDisease ? "None (Healthy)" : treeDisease
+              }`}</Form.Text>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="notes">

@@ -74,6 +74,26 @@ app.post("/upload", async (req, res) => {
 app.get("/reports", async (req, res) => {
   const reports = await Report.find()
   console.log("🚀 ~ app.get ~ reports:", reports)
+  const seenReports = reports.map((report) => ({ ...report._doc, status: 'seen' }))
+  console.log("🚀 ~ app.get ~ seenReports:", seenReports)
+  console.log('updating')
+  await Report.updateMany({},
+    {
+      $set: {
+        status: "seen"
+      }
+    })
+  console.log('done')
+  res.send(seenReports)
+});
+
+app.post("/seens", async (req, res) => {
+  const data = req.body
+  const reports = await Report.find({
+    'id': { $in: data }
+  })
+  console.log("🚀 ~ app.get ~ reports:", reports)
+  // Report.updateMany({}, { "$set": { "status": "seen" } });
   res.send(reports)
 });
 

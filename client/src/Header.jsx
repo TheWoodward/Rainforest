@@ -51,61 +51,39 @@ const Header = () => {
           <Offcanvas.Body>
             <Nav className="justify-content-start flex-grow-1 pe-3">
               {/* <Nav.Link href="#action1">Home</Nav.Link> */}
-              <Nav.Link>
+              {account?.level === 'Ranger' && <><Nav.Link>
                 <Link
                   style={{ textDecoration: "none", color: "white" }}
                   to="/add"
                 >
-                  Add Tree
+                  Add Trees
                 </Link>
               </Nav.Link>
-              <Nav.Link>
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to="/reports"
-                >
-                  {(account?.user ? account.user + "'s" : "My") + " Reports"}
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
+                <Nav.Link>
+                  <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    to="/reports"
+                  >
+                    {(account?.user ? account.user + "'s" : "My") + " Reports"}
+                  </Link>
+                </Nav.Link></>}
+              {account?.level === 'Analyst' && <Nav.Link>
                 <Link
                   style={{ textDecoration: "none", color: "white" }}
                   to="/analysis"
                 >
                   Analysis
                 </Link>
-              </Nav.Link>
-              <Nav.Link>
+              </Nav.Link>}
+
+              {account?.level === 'Ranger' && <><Nav.Link>
                 <LocationIcon></LocationIcon>
               </Nav.Link>
-              <SurveyDropdown></SurveyDropdown>
-              {/* <NavDropdown
-                title="Dropdown"
-                id={`offcanvasNavbarDropdown-expand-${expand}`}
-              >
-                <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action4">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action5">
-                  Something else here
-                </NavDropdown.Item>
-              </NavDropdown> */}
+                <SurveyDropdown></SurveyDropdown></>}
             </Nav>
             <div class={`d-none d-${expand}-block`}>
               <ConnectionIcon className="justify-content-end"></ConnectionIcon>
             </div>
-
-            {/* <Form className="d-flex">
-              <Form.Control
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="outline-success">Search</Button>
-            </Form> */}
           </Offcanvas.Body>
         </Navbar.Offcanvas>
       </Container>

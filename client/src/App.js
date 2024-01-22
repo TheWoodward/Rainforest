@@ -76,7 +76,19 @@ function App() {
       const surveysResponse = await axios.get("http://localhost:8080/surveys")
       setSurveysData(surveysResponse.data)
     }
-    getSurveys();
+    try {
+      if (connectedData) {
+        getSurveys();
+      } else {
+        const localReports = JSON.parse(localStorage.getItem("reports")) || []
+        const surveys = localReports.map((report) => report.survey).filter((survey) => survey && survey.length > 0)
+        const uniqueSurveys = [...new Set(surveys)]
+        setSurveysData(uniqueSurveys)
+      }
+    } catch (ex) {
+
+    }
+
   }, []);
 
 
