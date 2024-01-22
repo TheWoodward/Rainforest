@@ -15,18 +15,19 @@ import Reports from "./Reports";
 export const Context = createContext();
 
 function App() {
-  const [show, setShow] = useState(true);
-  const [textInput, setTextInput] = useState("");
-  const [level, setLevel] = useState(null);
-  const [showToast, setShowToast] = useState(false);
-  const [toastContent, setToastContent] = useState({});
-
+  //Contexts
   const [accountContext, setAccountContext] = useState(null);
   const [latContext, setLatContext] = useState(null);
   const [longContext, setLongContext] = useState(null);
   const [surveyContext, setSurveyContext] = useState(null);
   const [surveysContext, setSurveysContext] = useState([]);
   const [connectedContext, setConnectedContext] = useState(false);
+
+  const [showModal, setShowModal] = useState(true);
+  const [usernameValue, setUsernameValue] = useState("");
+  const [level, setLevel] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastContent, setToastContent] = useState({});
 
   useEffect(() => {
     const uploadLocalReports = async () => {
@@ -61,7 +62,7 @@ function App() {
   useEffect(() => {
     if (accountContext) {
       localStorage.setItem("accountContext", JSON.stringify(accountContext));
-      setShow(false);
+      setShowModal(false);
     }
   }, [accountContext]);
 
@@ -84,19 +85,19 @@ function App() {
 
     }
 
-  }, []);
+  }, [connectedContext]);
 
 
   const handleClose = () => {
-    setShow(false);
+    setShowModal(false);
   };
 
   const handleSave = (e) => {
     e.preventDefault();
-    if (!level || !textInput || textInput.length < 1) {
+    if (!level || !usernameValue || usernameValue.length < 1) {
       return;
     }
-    setAccountContext({ user: textInput, level: level });
+    setAccountContext({ user: usernameValue, level: level });
     handleClose();
   };
 
@@ -144,7 +145,7 @@ function App() {
           </Toast>
         </ToastContainer>
 
-        <Modal show={show}>
+        <Modal show={showModal}>
           <Modal.Header>
             <Modal.Title>Welcome to Rainforest Ranger!</Modal.Title>
           </Modal.Header>
@@ -153,8 +154,8 @@ function App() {
               <Form.Group className="mb-3" controlId="user">
                 <Form.Label>Please enter your name:</Form.Label>
                 <Form.Control
-                  value={textInput}
-                  onChange={(e) => setTextInput(e.target.value)}
+                  value={usernameValue}
+                  onChange={(e) => setUsernameValue(e.target.value)}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="account">

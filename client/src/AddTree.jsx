@@ -23,6 +23,7 @@ const treeDiseases = [
   { name: "Fungi", image: "🍄" },
   { name: "Nutrient Deficiency", image: "🤒" },
   { name: "Dead", image: "💀" },
+  { name: "Illegally Felled", image: "🪓" }
 ];
 
 const AddTree = () => {
@@ -118,7 +119,7 @@ const AddTree = () => {
       size,
       status: "created",
       location: { lat, long },
-      survey,
+      survey: survey || "None",
       user: account.user,
     };
 
@@ -175,25 +176,18 @@ const AddTree = () => {
     setModalContent({ type: "Automatic Report" });
   };
 
-  //   Individual Trees
-  // Age
-  // Condition
-  // Location
-  // Illegal felling?
-  // Growth?
-  // Other notes
-  // Photos?
-  // Date/time
 
   const getPreviousCounts = (species) => {
     const localReports = JSON.parse(localStorage.getItem("reports")) || []
     const filteredReports = localReports.filter((report) => report?.species === species)
     const previousCounts = {}
     filteredReports.forEach((report) => {
-      if (previousCounts[report.survey]) {
-        previousCounts[report.survey] += 1
-      } else {
-        previousCounts[report.survey] = 1
+      if (report.survey) {
+        if (previousCounts[report.survey]) {
+          previousCounts[report.survey] += 1
+        } else {
+          previousCounts[report.survey] = 1
+        }
       }
     });
     return previousCounts;
@@ -216,6 +210,11 @@ const AddTree = () => {
               <br></br>
               <Form.Label>Location</Form.Label>{" "}
               <Form.Text>{lat + ", " + long}</Form.Text>
+              <div className="google-map-code">
+                <iframe
+                  src={`https://maps.google.com/maps?q=${lat},${long}&hl=es;z=14&output=embed`}
+                ></iframe>
+              </div>
             </Form.Group>
             <Form.Group className="mb-3" controlId="species">
               <Form.Label>Species</Form.Label>
@@ -267,7 +266,7 @@ const AddTree = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="diseases">
-              <Form.Label>Diseases</Form.Label>
+              <Form.Label>Diseases/Conditions</Form.Label>
               <br></br>
               {treeDiseases.map((diseases) => (
                 <Form.Check id={diseases.name} inline>
