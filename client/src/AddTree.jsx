@@ -176,7 +176,6 @@ const AddTree = () => {
     setModalContent({ type: "Automatic Report" });
   };
 
-
   const getPreviousCounts = (species) => {
     const localReports = JSON.parse(localStorage.getItem("reports")) || []
     const filteredReports = localReports.filter((report) => report?.species === species)
@@ -194,139 +193,113 @@ const AddTree = () => {
   }
 
   const getModalBody = (type) => {
-    if (type === "Manual Report") {
-      return (
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="fixed">
-              <Form.Label>Date & Time</Form.Label>{" "}
-              <Form.Text>
-                {datetime.toLocaleDateString() +
-                  " " +
-                  datetime.toLocaleTimeString()}
-              </Form.Text>
-              <br></br>
-              <Form.Label>Survey</Form.Label> <Form.Text>{survey}</Form.Text>
-              <br></br>
-              <Form.Label>Location</Form.Label>{" "}
-              <Form.Text>{lat + ", " + long}</Form.Text>
-              <div className="google-map-code">
-                <iframe
-                  src={`https://maps.google.com/maps?q=${lat},${long}&hl=es;z=14&output=embed`}
-                ></iframe>
-              </div>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="species">
-              <Form.Label>Species</Form.Label>
-              <br></br>
-              {treeSpecies.map((species) => (
-                <div>
-                  <Form.Check id={species.name} inline>
-                    <Form.Check.Input
-                      type="radio"
-                      name="species"
-                      onChange={(e) => setTreeName(e.target.id)}
-                    />
-                    <Form.Check.Label>
-                      {species.image} {species.name}
-                      {Object.keys(getPreviousCounts(species.name)).map((survey) => <div>{`${survey}: ${getPreviousCounts(species.name)[survey]} reported`}</div>)}
-                    </Form.Check.Label>
-                  </Form.Check>
-                </div>
-              ))}
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="age">
-              <Form.Label>Approximate Age</Form.Label>
-              <Form.Range
-                max={1000}
-                min={0}
-                defaultValue={0}
-                onChange={(e) => setAge(e.target.value)}
-              />
-              {age + " years"}
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="age">
-              <Form.Label>Approximate Size</Form.Label>
-              <br></br>
-              <UilTrees size={size / 4 + 30} />
-              <Form.Range
-                max={200}
-                min={0}
-                defaultValue={0}
-                onChange={(e) => setSize(e.target.value)}
-              />
-              {size + "ft"}
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="diseases">
-              <Form.Label>Diseases/Conditions</Form.Label>
-              <br></br>
-              {treeDiseases.map((diseases) => (
-                <Form.Check id={diseases.name} inline>
-                  <Form.Check.Input
-                    type="radio"
-                    name="diseases"
-                    onChange={(e) => setTreeDisease(e.target.id)}
-                  />
-                  <Form.Check.Label>
-                    {diseases.image}
-                    <br></br>
-                    {diseases.name}
-                  </Form.Check.Label>
-                </Form.Check>
-              ))}
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="notes">
-              <Form.Label>Other Notes</Form.Label>
-              <Form.Control
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-      );
-    }
-    return (
-      <Modal.Body>
-        <Form onSubmit={handleSave}>
-          <Form.Group className="mb-3" controlId="datetime">
-            <Form.Label>Date & Time</Form.Label>
-            <br></br>
-            <Form.Text>
-              {datetime.toLocaleDateString() +
-                " " +
-                datetime.toLocaleTimeString()}
-            </Form.Text>
-          </Form.Group>
+    const isManual = type === "Manual Report"
+    return (<Modal.Body>
+      <Form onSubmit={handleSave}>
+        <Form.Group className="mb-3" controlId="fixed">
+          <Form.Label>Date & Time</Form.Label>{" "}
+          <Form.Text>
+            {datetime.toLocaleDateString() +
+              " " +
+              datetime.toLocaleTimeString()}
+          </Form.Text>
+          <br></br>
+          <Form.Label>Survey</Form.Label> <Form.Text>{survey}</Form.Text>
+          <br></br>
+          <Form.Label>Location</Form.Label>{" "}
+          <Form.Text>{lat + ", " + long}</Form.Text>
+          {connected && <div className="google-map-code">
+            <iframe
+              src={`https://maps.google.com/maps?q=${lat},${long}&hl=es;z=14&output=embed`}
+            ></iframe>
+          </div>}
+        </Form.Group>
+        {isManual ? <Form.Group className="mb-3" controlId="species">
+          <Form.Label>Species</Form.Label>
+          <br></br>
+          {treeSpecies.map((species) => (
+            <div>
+              <Form.Check id={species.name} inline>
+                <Form.Check.Input
+                  type="radio"
+                  name="species"
+                  onChange={(e) => setTreeName(e.target.id)}
+                />
+                <Form.Check.Label>
+                  {species.image} {species.name}
+                  {Object.keys(getPreviousCounts(species.name)).map((survey) => <div>{`${survey}: ${getPreviousCounts(species.name)[survey]} reported`}</div>)}
+                </Form.Check.Label>
+              </Form.Check>
+            </div>
+          ))}
+        </Form.Group> :
           <Form.Group className="mb-3" controlId="species">
             <Form.Label>Species</Form.Label>
             <br></br>
             <Card.Img variant="top" src={preview} />
             <Form.Text>{`Detected Species: ${treeName}`}</Form.Text>
           </Form.Group>
-
+        }
+        <Form.Group className="mb-3" controlId="age">
+          <Form.Label>Approximate Age</Form.Label>
+          <Form.Range
+            max={1000}
+            min={0}
+            defaultValue={0}
+            onChange={(e) => setAge(e.target.value)}
+          />
+          {age + " years"}
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="age">
+          <Form.Label>Approximate Size</Form.Label>
+          <br></br>
+          <UilTrees size={size / 4 + 30} />
+          <Form.Range
+            max={200}
+            min={0}
+            defaultValue={0}
+            onChange={(e) => setSize(e.target.value)}
+          />
+          {size + "ft"}
+        </Form.Group>
+        {isManual ? <Form.Group className="mb-3" controlId="diseases">
+          <Form.Label>Diseases/Conditions</Form.Label>
+          <br></br>
+          {treeDiseases.map((diseases) => (
+            <Form.Check id={diseases.name} inline>
+              <Form.Check.Input
+                type="radio"
+                name="diseases"
+                onChange={(e) => setTreeDisease(e.target.id)}
+              />
+              <Form.Check.Label>
+                {diseases.image}
+                <br></br>
+                {diseases.name}
+              </Form.Check.Label>
+            </Form.Check>
+          ))}
+        </Form.Group> :
           <Form.Group className="mb-3" controlId="diseases">
-            <Form.Label>Diseases</Form.Label>
+            <Form.Label>Diseases/Conditions</Form.Label>
             <br></br>
             <Form.Text>{`Detected Diseases: ${!treeDisease ? "None (Healthy)" : treeDisease
               }`}</Form.Text>
           </Form.Group>
+        }
 
-          <Form.Group className="mb-3" controlId="notes">
-            <Form.Label>Other Notes</Form.Label>
-            <Form.Control
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </Form.Group>
-          <Button variant="success" type="submit">
-            Upload
-          </Button>
-        </Form>
-      </Modal.Body>
-    );
+        <Form.Group className="mb-3" controlId="notes">
+          <Form.Label>Other Notes</Form.Label>
+          <Form.Control
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+        </Form.Group>
+        <Button variant="success" type="submit">
+          Upload
+        </Button>
+      </Form>
+    </Modal.Body>)
   };
 
   return (
@@ -360,14 +333,6 @@ const AddTree = () => {
           <Modal.Title>{modalContent.type}</Modal.Title>
         </Modal.Header>
         {getModalBody(modalContent.type)}
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSave}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
       </Modal>
 
       <Container style={{ paddingTop: 50 }}>
