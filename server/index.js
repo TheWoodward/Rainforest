@@ -37,7 +37,7 @@ app.post("/identify", async (req, res) => {
     { images: [base64], health: "auto" },
     {
       headers: {
-        ["Api-Key"]: "XXWmCjQS1UIetuJE295vi4C4Q4XSU8i79wKFUCBZWHTJ5mOuWp",
+        ["Api-Key"]: "N1ZcG8szHDzb7O3L72G9qfsAvxpQ3QKFCESCa9eBC4yAFDdJVN",
       },
     }
   );

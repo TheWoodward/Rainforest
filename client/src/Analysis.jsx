@@ -16,6 +16,26 @@ import {
 } from "recharts";
 import ReportsTable from "./ReportsTable";
 
+const flattenObject = (ob) => {
+  var toReturn = {};
+
+  for (var i in ob) {
+    if (!ob.hasOwnProperty(i)) continue;
+
+    if (typeof ob[i] == "object" && ob[i] !== null) {
+      var flatObject = flattenObject(ob[i]);
+      for (var x in flatObject) {
+        if (!flatObject.hasOwnProperty(x)) continue;
+
+        toReturn[i + "." + x] = flatObject[x];
+      }
+    } else {
+      toReturn[i] = ob[i];
+    }
+  }
+  return toReturn;
+};
+
 const Analysis = () => {
   const [reports, setReports] = useState([]);
   const [countsData, setCountsData] = useState([]);
@@ -149,7 +169,7 @@ const Analysis = () => {
             <div>
               <p>Looking for more analysis? Export to Google Sheets:</p>
               <CSVLink
-                data={reports}
+                data={reports.map((report) => flattenObject(report))}
                 filename={`RainforestRangerExport-${new Date().toLocaleDateString()}`}
                 target="_blank"
               >
