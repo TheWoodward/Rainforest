@@ -1,43 +1,29 @@
 import { UilClock, UilEye, UilUpload } from "@iconscout/react-unicons";
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { Context } from "./App";
+import { getReports } from "./downloadHelpers";
 
 const Reports = () => {
   const { connectedContext } = useContext(Context);
   const [connected] = connectedContext;
 
-  const [reports, setReports] = useState(null);
-  console.table(reports);
+  const [reports, setReports] = useState([]);
 
-  useEffect(() => {
-    if (reports) {
-      localStorage.setItem("reports", JSON.stringify(reports));
-    }
-
-  }, [reports]);
+  const updateReports = async () => {
+    setReports(await getReports())
+  }
 
   useEffect(() => {
     if (connected) {
       try {
-        const getReports = async () => {
-          const localReports = JSON.parse(localStorage.getItem("reports")) || []
-          const reportsResponse = await axios.post("http://localhost:8080/seens", localReports.filter((report) => report.status === "uploaded").map((report) => report.id))
-          const seens = reportsResponse.data
-          const newReports = localReports.map((report) => ({ ...report, status: seens.find((seenReport) => seenReport.id === report.id)?.status || report.status }))
-          setReports(newReports)
-        }
-        getReports();
+        updateReports()
       } catch (ex) {
       }
     } else {
       setReports(JSON.parse(localStorage.getItem("reports")) || []);
-
     }
-
-
-  }, []);
+  }, [connected]);
 
   const getStatusIcon = (status) => {
     if (status === "uploaded") {

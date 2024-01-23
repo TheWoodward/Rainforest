@@ -13,7 +13,6 @@ const Analysis = () => {
   const [countsData, setCountsData] = useState([])
   const [usersData, setUsersData] = useState([])
   const [species, setSpecies] = useState([])
-  console.table(reports)
 
   const greens = ['green', 'darkgreen', 'limegreen', 'forestgreen', 'lightgreen', 'darkolivegreen', 'darkseagreen', 'greenyellow', 'lawngreen']
 

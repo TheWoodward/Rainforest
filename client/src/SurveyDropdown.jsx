@@ -44,7 +44,6 @@ const SurveyDropdown = () => {
         <Modal.Body>
           <Form onSubmit={handleSave}>
             <Form.Group className="mb-3" controlId="notes">
-              {/* <Form.Label>Survey Name</Form.Label> */}
               <Form.Control
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
@@ -55,14 +54,6 @@ const SurveyDropdown = () => {
             </Button>
           </Form>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer> */}
       </Modal>
 
       <Dropdown>

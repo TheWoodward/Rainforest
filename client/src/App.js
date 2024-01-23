@@ -11,6 +11,7 @@ import Analysis from "./Analysis";
 import Header from "./Header";
 import Home from "./Home";
 import Reports from "./Reports";
+import { uploadLocalReports } from "./uploadHelpers";
 
 export const Context = createContext();
 
@@ -23,40 +24,26 @@ function App() {
   const [surveysContext, setSurveysContext] = useState([]);
   const [connectedContext, setConnectedContext] = useState(false);
 
+  //State
   const [showModal, setShowModal] = useState(true);
   const [usernameValue, setUsernameValue] = useState("");
   const [level, setLevel] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
+
   useEffect(() => {
-    const uploadLocalReports = async () => {
-      if (connectedContext) {
-        const reports = JSON.parse(localStorage.getItem("reports")) || [];
-        const localReports = reports.filter(
-          (report) => report.status === "created"
-        );
-        for (const localReport of localReports) {
-          const response = await axios.post(
-            "http://localhost:8080/upload",
-            localReport
-          );
-          const responseId = response.data.id;
-          setToastContent({
-            header: "Success!",
-            body: `Report ${responseId} uploaded.`,
-            bg: "success",
-          });
-          setShowToast(true);
-          const index = reports.findIndex((report) => report.id === responseId);
-          if (reports[index]) {
-            reports[index].status = response.data.status;
-            localStorage.setItem("reports", JSON.stringify(reports));
-          }
-        }
+    if (connectedContext) {
+      const onSuccess = (id) => {
+        setToastContent({
+          header: "Success!",
+          body: `Report ${id} uploaded.`,
+          bg: "success",
+        });
+        setShowToast(true);
       }
-    };
-    uploadLocalReports();
+      uploadLocalReports(onSuccess);
+    }
   }, [connectedContext]);
 
   useEffect(() => {
@@ -178,19 +165,6 @@ function App() {
             </Form>
           </Modal.Body>
         </Modal>
-
-        <header className="App-header">
-          {/* <button onClick={handleLocationClick}>Location</button>
-        {lat}
-        {long}
-        {lat && (
-          <div className="google-map-code">
-            <iframe
-              src={`https://maps.google.com/maps?q=${lat},${long}&hl=es;z=14&output=embed`}
-            ></iframe>
-          </div>
-        )} */}
-        </header>
       </div>
     </Context.Provider>
   );

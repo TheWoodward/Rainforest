@@ -230,13 +230,6 @@ const AddTree = () => {
                     <Form.Check.Label>
                       {species.image} {species.name}
                       {Object.keys(getPreviousCounts(species.name)).map((survey) => <div>{`${survey}: ${getPreviousCounts(species.name)[survey]} reported`}</div>)}
-                      {/* <Card.Img
-                      variant="top"
-                      src={
-                        preview ||
-                        "https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                      }
-                    /> */}
                     </Form.Check.Label>
                   </Form.Check>
                 </div>
@@ -380,9 +373,6 @@ const AddTree = () => {
       <Container style={{ paddingTop: 50 }}>
         <Row>
           <Col>
-            {/* <Button size="lg" variant="success" onClick={handleManual}>
-              🌳
-            </Button> */}
             <Card>
               <Card.Img
                 variant="top"
@@ -430,20 +420,9 @@ const AddTree = () => {
               </Card.Body>
             </Card>
           </Col>
-          {/* <Col>
-            <Button size="lg" variant="success">
-              🌲
-            </Button>
-          </Col>
-          <Col>
-            <Button size="lg" variant="success">
-              🌴
-            </Button>
-          </Col> */}
         </Row>
       </Container>
       <input
-        // style={input}
         type="file"
         accept=".jpg,.jpeg, .png|image/*"
         id="image"
@@ -454,12 +433,6 @@ const AddTree = () => {
         style={{ display: "none" }}
       />
       <br></br>
-      {/* <img src={preview}></img>
-      {preview}
-      <br></br>
-      {treeName}
-      <br></br>
-      {!treeDisease ? "Healthy" : "Unhealthy - " + treeDisease} */}
     </>
   );
 };
