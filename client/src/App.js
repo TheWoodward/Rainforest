@@ -31,7 +31,6 @@ function App() {
   const [showToast, setShowToast] = useState(false);
   const [toastContent, setToastContent] = useState({});
 
-
   useEffect(() => {
     if (connectedContext) {
       const onSuccess = (id) => {
@@ -41,7 +40,7 @@ function App() {
           bg: "success",
         });
         setShowToast(true);
-      }
+      };
       uploadLocalReports(onSuccess);
     }
   }, [connectedContext]);
@@ -54,26 +53,26 @@ function App() {
   }, [accountContext]);
 
   useEffect(() => {
-    setAccountContext(JSON.parse(localStorage.getItem("accountContext")) || null);
+    setAccountContext(
+      JSON.parse(localStorage.getItem("accountContext")) || null
+    );
     const getSurveys = async () => {
-      const surveysResponse = await axios.get("http://localhost:8080/surveys")
-      setSurveysContext(surveysResponse.data)
-    }
+      const surveysResponse = await axios.get("http://localhost:8080/surveys");
+      setSurveysContext(surveysResponse.data);
+    };
     try {
       if (connectedContext) {
         getSurveys();
       } else {
-        const localReports = JSON.parse(localStorage.getItem("reports")) || []
-        const surveys = localReports.map((report) => report.survey).filter((survey) => survey && survey.length > 0)
-        const uniqueSurveys = [...new Set(surveys)]
-        setSurveysContext(uniqueSurveys)
+        const localReports = JSON.parse(localStorage.getItem("reports")) || [];
+        const surveys = localReports
+          .map((report) => report.survey)
+          .filter((survey) => survey && survey.length > 0);
+        const uniqueSurveys = [...new Set(surveys)];
+        setSurveysContext(uniqueSurveys);
       }
-    } catch (ex) {
-
-    }
-
+    } catch (ex) {}
   }, [connectedContext]);
-
 
   const handleClose = () => {
     setShowModal(false);

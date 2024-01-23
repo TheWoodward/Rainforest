@@ -10,23 +10,20 @@ const Reports = () => {
   const [reports, setReports] = useState([]);
 
   const updateReports = async () => {
-    setReports(await getReports())
-  }
+    setReports(await getReports());
+  };
 
   useEffect(() => {
     if (connected) {
       try {
-        updateReports()
-      } catch (ex) {
-      }
+        updateReports();
+      } catch (ex) {}
     } else {
       setReports(JSON.parse(localStorage.getItem("reports")) || []);
     }
   }, [connected]);
 
-  return (
-    <ReportsTable reports={reports}></ReportsTable>
-  );
+  return <ReportsTable reports={reports}></ReportsTable>;
 };
 
 export default Reports;

@@ -1,9 +1,6 @@
 import { useContext } from "react";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
@@ -20,15 +17,9 @@ const Header = () => {
   const [account] = accountContext;
 
   return (
-    <Navbar
-      expand={expand}
-      // className="bg-body-tertiary mb-3"
-      bg="success"
-      variant="dark"
-    >
+    <Navbar expand={expand} bg="success" variant="dark">
       <Container fluid>
         <Navbar.Brand>
-          {" "}
           <Link style={{ textDecoration: "none", color: "white" }} to="/">
             {brand}
           </Link>
@@ -50,36 +41,46 @@ const Header = () => {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <Nav className="justify-content-start flex-grow-1 pe-3">
-              {/* <Nav.Link href="#action1">Home</Nav.Link> */}
-              {account?.level === 'Ranger' && <><Nav.Link>
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to="/add"
-                >
-                  Add Trees
-                </Link>
-              </Nav.Link>
+              {account?.level === "Ranger" && (
+                <>
+                  <Nav.Link>
+                    <Link
+                      style={{ textDecoration: "none", color: "white" }}
+                      to="/add"
+                    >
+                      Add Trees
+                    </Link>
+                  </Nav.Link>
+                  <Nav.Link>
+                    <Link
+                      style={{ textDecoration: "none", color: "white" }}
+                      to="/reports"
+                    >
+                      {(account?.user ? account.user + "'s" : "My") +
+                        " Reports"}
+                    </Link>
+                  </Nav.Link>
+                </>
+              )}
+              {account?.level === "Analyst" && (
                 <Nav.Link>
                   <Link
                     style={{ textDecoration: "none", color: "white" }}
-                    to="/reports"
+                    to="/analysis"
                   >
-                    {(account?.user ? account.user + "'s" : "My") + " Reports"}
+                    Analysis
                   </Link>
-                </Nav.Link></>}
-              {account?.level === 'Analyst' && <Nav.Link>
-                <Link
-                  style={{ textDecoration: "none", color: "white" }}
-                  to="/analysis"
-                >
-                  Analysis
-                </Link>
-              </Nav.Link>}
+                </Nav.Link>
+              )}
 
-              {account?.level === 'Ranger' && <><Nav.Link>
-                <LocationIcon></LocationIcon>
-              </Nav.Link>
-                <SurveyDropdown></SurveyDropdown></>}
+              {account?.level === "Ranger" && (
+                <>
+                  <Nav.Link>
+                    <LocationIcon></LocationIcon>
+                  </Nav.Link>
+                  <SurveyDropdown></SurveyDropdown>
+                </>
+              )}
             </Nav>
             <div class={`d-none d-${expand}-block`}>
               <ConnectionIcon className="justify-content-end"></ConnectionIcon>

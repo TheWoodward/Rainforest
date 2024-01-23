@@ -59,41 +59,50 @@ app.post("/identify", async (req, res) => {
 app.post("/upload", async (req, res) => {
   const data = req.body;
   console.log("uploaded data", data);
-  const updatedAt = new Date()
+  const updatedAt = new Date();
   const upload = new Report({ ...data, status: "uploaded", updatedAt });
   upload.save();
   res.send({
     id: data.id,
     status: "uploaded",
-    updatedAt
+    updatedAt,
   });
 });
 
 app.get("/reports", async (req, res) => {
-  const reports = await Report.find()
-  const seenReports = reports.map((report) => ({ ...report._doc, status: 'seen', updatedAt: new Date() }))
-  await Report.updateMany({},
+  const reports = await Report.find();
+  const seenReports = reports.map((report) => ({
+    ...report._doc,
+    status: "seen",
+    updatedAt: new Date(),
+  }));
+  await Report.updateMany(
+    {},
     {
       $set: {
-        status: "seen"
-      }
-    })
-  res.send(seenReports)
+        status: "seen",
+        updatedAt: new Date(),
+      },
+    }
+  );
+  res.send(seenReports);
 });
 
 app.post("/seens", async (req, res) => {
-  const data = req.body
+  const data = req.body;
   const reports = await Report.find({
-    'id': { $in: data }
-  })
-  res.send(reports)
+    id: { $in: data },
+  });
+  res.send(reports);
 });
 
 app.get("/surveys", async (req, res) => {
-  const reports = await Report.find()
-  const surveys = reports.map((report) => report.survey).filter((survey) => survey && survey.length > 0)
-  const uniqueSurveys = [...new Set(surveys)]
-  res.send(uniqueSurveys)
+  const reports = await Report.find();
+  const surveys = reports
+    .map((report) => report.survey)
+    .filter((survey) => survey && survey.length > 0);
+  const uniqueSurveys = [...new Set(surveys)];
+  res.send(uniqueSurveys);
 });
 
 app.listen(port, () => {
