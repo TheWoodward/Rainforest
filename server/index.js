@@ -18,7 +18,7 @@ const mongoDbUri =
 const connectToDb = async () => {
   try {
     await mongoose.connect(mongoDbUri, { dbName: "rainforestranger" });
-    console.log("Connected to MongoDB");
+    console.log("Connected to database");
   } catch (ex) {
     console.error(ex);
   }
@@ -97,5 +97,5 @@ app.get("/surveys", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Rainforest Ranger server running on port ${port}`);
 });
