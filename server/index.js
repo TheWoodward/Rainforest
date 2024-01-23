@@ -27,7 +27,7 @@ const connectToDb = async () => {
 connectToDb();
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Successfully Connected");
 });
 
 app.post("/identify", async (req, res) => {
@@ -42,7 +42,6 @@ app.post("/identify", async (req, res) => {
     }
   );
   const result = plantData?.data?.result;
-  console.log("🚀 ~ app.post ~ result:", result?.disease?.suggestions);
   const species = result?.classification?.suggestions?.[0]?.name;
   const isHealthy = result?.is_healthy?.binary;
   const disease = !isHealthy && result?.disease?.suggestions?.[0]?.name;
@@ -55,9 +54,6 @@ app.post("/identify", async (req, res) => {
     species,
     disease,
   });
-  // console.log(plantData);
-  // console.log(req);
-  // res.send("Hello World!");
 });
 
 app.post("/upload", async (req, res) => {
@@ -75,17 +71,13 @@ app.post("/upload", async (req, res) => {
 
 app.get("/reports", async (req, res) => {
   const reports = await Report.find()
-  console.log("🚀 ~ app.get ~ reports:", reports)
   const seenReports = reports.map((report) => ({ ...report._doc, status: 'seen', updatedAt: new Date() }))
-  console.log("🚀 ~ app.get ~ seenReports:", seenReports)
-  console.log('updating')
   await Report.updateMany({},
     {
       $set: {
         status: "seen"
       }
     })
-  console.log('done')
   res.send(seenReports)
 });
 
@@ -94,8 +86,6 @@ app.post("/seens", async (req, res) => {
   const reports = await Report.find({
     'id': { $in: data }
   })
-  console.log("🚀 ~ app.get ~ reports:", reports)
-  // Report.updateMany({}, { "$set": { "status": "seen" } });
   res.send(reports)
 });
 
@@ -103,7 +93,6 @@ app.get("/surveys", async (req, res) => {
   const reports = await Report.find()
   const surveys = reports.map((report) => report.survey).filter((survey) => survey && survey.length > 0)
   const uniqueSurveys = [...new Set(surveys)]
-  console.log("🚀 ~ app.get ~ uniqueSurveys:", uniqueSurveys)
   res.send(uniqueSurveys)
 });
 
