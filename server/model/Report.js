@@ -5,7 +5,7 @@ const reportSchema = new mongoose.Schema({
   species: String,
   disease: String,
   datetime: Date,
-  readAt: Date,
+  updatedAt: Date,
   notes: String,
   status: String,
   image: String,

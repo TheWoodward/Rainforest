@@ -6,7 +6,11 @@ export const getReports = async () => {
   const seens = reportsResponse.data
   //workaround for race condition
   const localReports2 = JSON.parse(localStorage.getItem("reports")) || []
-  const newReports = localReports2.map((report) => ({ ...report, status: seens.find((seenReport) => seenReport.id === report.id)?.status || report.status }))
+  const newReports = localReports2.map((report) => ({
+    ...report,
+    status: seens.find((seenReport) => seenReport.id === report.id)?.status || report.status,
+    updatedAt: seens.find((seenReport) => seenReport.id === report.id)?.updatedAt || report.updatedAt
+  }))
   localStorage.setItem("reports", JSON.stringify(newReports));
   return newReports
 }

@@ -199,9 +199,7 @@ const AddTree = () => {
         <Form.Group className="mb-3" controlId="fixed">
           <Form.Label>Date & Time</Form.Label>{" "}
           <Form.Text>
-            {datetime.toLocaleDateString() +
-              " " +
-              datetime.toLocaleTimeString()}
+            {datetime.toLocaleString}
           </Form.Text>
           <br></br>
           <Form.Label>Survey</Form.Label> <Form.Text>{survey}</Form.Text>

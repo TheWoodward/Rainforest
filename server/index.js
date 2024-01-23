@@ -63,18 +63,20 @@ app.post("/identify", async (req, res) => {
 app.post("/upload", async (req, res) => {
   const data = req.body;
   console.log("uploaded data", data);
-  const upload = new Report({ ...data, status: "uploaded" });
+  const updatedAt = new Date()
+  const upload = new Report({ ...data, status: "uploaded", updatedAt });
   upload.save();
   res.send({
     id: data.id,
     status: "uploaded",
+    updatedAt
   });
 });
 
 app.get("/reports", async (req, res) => {
   const reports = await Report.find()
   console.log("🚀 ~ app.get ~ reports:", reports)
-  const seenReports = reports.map((report) => ({ ...report._doc, status: 'seen' }))
+  const seenReports = reports.map((report) => ({ ...report._doc, status: 'seen', updatedAt: new Date() }))
   console.log("🚀 ~ app.get ~ seenReports:", seenReports)
   console.log('updating')
   await Report.updateMany({},

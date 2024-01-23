@@ -15,6 +15,7 @@ export const uploadLocalReports = async (onSuccess) => {
     const index = reports.findIndex((report) => report.id === responseId);
     if (reports[index]) {
       reports[index].status = response.data.status;
+      reports[index].updatedAt = response.data.updatedAt;
     }
   }
   localStorage.setItem("reports", JSON.stringify(reports));
